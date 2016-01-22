@@ -106,7 +106,7 @@
             var index = _elem.find(_tag + ".active").data('index');
             var current = _elem.find(_tag + "[data-index='" + index + "']");
             var next = _elem.find(_tag + "[data-index='" + (index + 1) + "']");
-            
+
             var pos;
             if (next.length == 0) {
                 if (_settings.loop) {
@@ -232,6 +232,7 @@
             _lastAnimationTime = timeNow;
         }
 
+        // 浏览器不支持时候退化到滚动模式
         function responsive() {
             var flag = false;
             var type = typeof _settings.responsiveFallback;
@@ -283,10 +284,7 @@
             }
         }
         
-        
-        /* 
-            Get everything ready before binding wheel scroll events 
-        */
+        //初始化
         _elem.addClass(_wrapperClassName).css("position", "relative");
         _sections.each(function (index) {
             $(this).css({
@@ -349,7 +347,8 @@
             
             // 生成按钮栏
             ul.html(_pageBarList);
-
+            
+            // fix 不同方向pageBar的排列方式
             var lis = ul.find("li");
             if (_settings.direction == 'horizontal') {
                 lis.css("display", "inline-block");
@@ -357,7 +356,6 @@
             else {
                 lis.css("display", "block");
             }
-            
             
             // 添加点击跳转事件
             $("ul." + _pageBarClassName + " li a").click(function () {
@@ -394,6 +392,7 @@
                     var href = window.location.href.substr(0, window.location.href.indexOf('#')) + _urlHashHeader + tarIndex;
                     history.pushState({}, document.title, href);
                 }
+
                 var pos = (index - 1) * -100;
                 _elem.transformPage(_settings, pos, index);
             }
@@ -405,7 +404,8 @@
                 $("ul." + _pageBarClassName + " li a[data-index='1']").addClass("active");
             }
         }
-
+        
+        // 绑定滚轮事件
         $(document).bind('mousewheel DOMMouseScroll MozMousePixelScroll', function (event) {
             event.preventDefault();
             var delta = event.originalEvent.wheelDelta || -event.originalEvent.detail;
